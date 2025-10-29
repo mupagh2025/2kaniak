@@ -1,0 +1,7 @@
+name: sprawozdanie
+on: push
+jobs:
+  pdf:
+    runs-on: ubuntu-22.04
+    steps: 
+      - pip install scipy, pint, open_atmos_jupyter_utils, matplotlib, numpy
