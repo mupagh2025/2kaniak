@@ -1,16 +1,43 @@
+# name: sprawozdanie
+# on: push
+# jobs:
+#   pdf:
+#     runs-on: ubuntu-22.04
+#     steps:
+#       - run: pip install ipykernel scipy pint open_atmos_jupyter_utils matplotlib numpy
+#       - uses: actions/checkout@v4
+#       - run: sudo apt-get install texlive-xetex inkscape pandoc
+#       - run: pip install nbconvert
+#       - run: python -m nbconvert --to pdf --execute mpdata_2d_numpy_only.ipynb
+#       - uses: actions/upload-artifact@v4 # @v3
+#         with:
+#           # name: sprawozdanie
+#           # path: test.pdf
+#           path: anim.gif
+
 name: sprawozdanie
 on: push
+
 jobs:
-  pdf:
+  build:
     runs-on: ubuntu-22.04
     steps:
-      - run: pip install ipykernel scipy pint open_atmos_jupyter_utils matplotlib numpy
       - uses: actions/checkout@v4
-      - run: sudo apt-get install texlive-xetex inkscape pandoc
-      - run: pip install nbconvert
-      - run: python -m nbconvert --to pdf --execute mpdata_2d_numpy_only.ipynb
-      - uses: actions/upload-artifact@v4 # @v3
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive-xetex inkscape pandoc
+          pip install ipykernel scipy pint open_atmos_jupyter_utils matplotlib numpy nbconvert
+
+      - name: Execute notebook and generate PDF
+        run: |
+          python -m nbconvert --to pdf --execute mpdata_2d_numpy_only.ipynb
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
         with:
-          # name: sprawozdanie
-          # path: test.pdf
-          path: anim.gif
+          name: wyniki
+          path: |
+            anim.gif
+            mpdata_2d_numpy_only.pdf
