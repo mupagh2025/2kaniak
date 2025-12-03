@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y texlive-xetex inkscaipe pandoc libomp-dev
+          sudo apt-get install -y texlive-xetex inkscape pandoc libomp-dev
           pip install ipykernel scipy pint open_atmos_jupyter_utils matplotlib numpy nbconvert PyMPDATA tabulate
 
       - name: Execute notebook and generate PDF
