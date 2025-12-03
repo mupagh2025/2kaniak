@@ -15,7 +15,7 @@
 #           # path: test.pdf
 #           path: anim.gif
 
-name: sprawozdanie
+name: projekt
 on: push
 
 jobs:
@@ -27,17 +27,16 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y texlive-xetex inkscape pandoc
-          pip install ipykernel scipy pint open_atmos_jupyter_utils matplotlib numpy nbconvert
+          sudo apt-get install -y texlive-xetex inkscaipe pandoc libomp-dev
+          pip install ipykernel scipy pint open_atmos_jupyter_utils matplotlib numpy nbconvert PyMPDATA tabulate
 
       - name: Execute notebook and generate PDF
         run: |
-          python -m nbconvert --to pdf --execute mpdata_2d_numpy_only.ipynb
+          python -m nbconvert --to pdf --execute project.ipynb
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: wyniki
+          name: projekt
           path: |
-            anim.gif
-            mpdata_2d_numpy_only.pdf
+            project.pdf
