@@ -32,11 +32,13 @@ jobs:
 
       - name: Execute notebook and generate PDF
         run: |
-          python -m nbconvert --to pdf --execute project.ipynb
+          python -m nbconvert --to pdf --execute project2.ipynb \
+            --TagRemovePreprocessor.enabled=True \
+            --TagRemovePreprocessor.remove_input_tags="hide_input"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: projekt
           path: |
-            project.pdf
+            project2.pdf
