@@ -45,7 +45,7 @@ jobs:
         with:
           name: tsunami_kania
           path: |
-            tsunami_kania.pdf
+            project2.pdf
 
 
 
