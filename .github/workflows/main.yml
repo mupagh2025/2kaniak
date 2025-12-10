@@ -17,28 +17,62 @@
 
 name: projekt
 on: push
-
 jobs:
-  build:
+  pdf:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+      - run: pip install ipykernel scipy pint open_atmos_jupyter_utils numpy PyMPDATA matplotlib tabulate nbconvert
+      - run: sudo apt-get update && sudo apt-get install -y texlive-xetex texlive-latex-extra inkscape pandoc
+      - run: pip install nbconvert
+      - run: jupyter nbconvert --to latex --execute project2.ipynb --TemplateExporter.exclude_input=True
+      - run: |
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y texlive-xetex inkscape pandoc libomp-dev
-          pip install ipykernel scipy pint open_atmos_jupyter_utils matplotlib numpy nbconvert PyMPDATA tabulate
+          sed -i '/\\title{/d'      project2.tex
+          sed -i '/\\author{/d'     project2.tex
+          sed -i '/\\date{/d'       project2.tex
+          sed -i '/\\maketitle/d'   project2.tex
 
-      - name: Execute notebook and generate PDF
-        run: |
-          python -m nbconvert --to pdf --execute project2.ipynb \
-            --TagRemovePreprocessor.enabled=True \
-            --TagRemovePreprocessor.remove_input_tags="hide_input"
+          sed -i '/HBox(children=/d' project2.tex
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+          sed -i '0,/\\begin{document}/s//\\begin{document}\n\\fontsize{10pt}{12pt}\\selectfont\n\\title{Jak powstaje fala tsunami w wyniku trzęsienia ziemii?}\n\\author{Kamil Kania}\n\\date{}\n\\maketitle\n/' project2.tex
+
+          xelatex -interaction=nonstopmode project2.tex
+          xelatex -interaction=nonstopmode project2.tex
+      
+
+      - uses: actions/upload-artifact@v4
         with:
-          name: projekt
+          name: tsunami_kania
           path: |
-            project2.pdf
+            tsunami_kania.pdf
+
+
+
+# name: projekt
+# on: push
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-22.04
+#     steps:
+#       - uses: actions/checkout@v4
+
+#       - name: Install dependencies
+#         run: |
+#           sudo apt-get update
+#           sudo apt-get install -y texlive-xetex inkscape pandoc libomp-dev
+#           pip install ipykernel scipy pint open_atmos_jupyter_utils matplotlib numpy nbconvert PyMPDATA tabulate
+
+#       - name: Execute notebook and generate PDF
+#         run: |
+#           python -m nbconvert --to pdf --execute project2.ipynb \
+#             --TagRemovePreprocessor.enabled=True \
+#             --TagRemovePreprocessor.remove_input_tags="hide_input"
+
+#       - name: Upload artifacts
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: projekt
+#           path: |
+#             project2.pdf
